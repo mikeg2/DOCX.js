@@ -1,4 +1,30 @@
-DOCX.js
-=======
+/*
+  This demo converts a DOCX file (passed in as an argument) to a String HTML document
+*/
 
-DOCX.js is a JavaScript library for converting the data in base64 DOCX files into HTML - and back! Please note that this library is licensed under the Microsoft Office Extensible File License - a license NOT approved by the OSI. While this license is based off of the MS-PL, which is OSI-approved, there are significant differences.
+
+/*
+  This function does the entire conversion form DOCX to String.
+  
+  DOCX.js requires a JSZip object as the input to convertContent.
+  It returns a NodeList, which is then converted to a string.
+*/
+function($file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+           var zip = new JSZip(e.target.result);
+           return convertNodeListToString(convertContent(zip));
+       };
+       reader.readAsBinaryString($file);
+    };
+}
+
+/*
+  Converts a NodeList to a HTML String.
+*/
+function convertNodeListToString(nodelist) {
+        var final_html = Array.prototype.reduce.call(nodelist, function(html, node) {
+            return html + ( node.outerHTML || node.nodeValue );
+        }, "");
+        return final_html;
+}
